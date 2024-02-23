@@ -7,7 +7,7 @@ from models.user_k_neighbor_similarity import NeighborSimilarity
 
 
 class SimilarityCalculatorService:
-    def __init__(self, df, mode='user', limit=2, K=2):
+    def __init__(self, df, K, mode='user', limit=2):
         self.df = df
         self.mode = mode
         self.limit = limit

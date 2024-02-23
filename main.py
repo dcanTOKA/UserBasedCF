@@ -6,14 +6,14 @@ from services.recommend_service import RecommendService
 from services.similarity_calculator_service import SimilarityCalculatorService
 
 
-def main(path: str):
+def main(path: str, K):
     loader = Loader(path)
     loader.load()
 
     mapper = UserItemMatrixMapper()
     pivot_df = mapper.fit(loader.df).transform()
 
-    sim_service = SimilarityCalculatorService(pivot_df)
+    sim_service = SimilarityCalculatorService(df=pivot_df, K=K)
     sim_service.calculate_similarity()
 
     recommend_service = RecommendService(pivot_df, sim_service.user_means, sim_service.top_k_filtered)
@@ -26,7 +26,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="User based Collaborative Filtering")
     parser.add_argument("--csv_path", type=str, default="data/ratings_demo.csv",
                         help="Path to the csv file containing user, item and rating.")
+    parser.add_argument("--no_of_neighbor", type=int, default=2,
+                        help="Path to the csv file containing user, item and rating.")
 
     args = parser.parse_args()
 
-    main(args.csv_path)
+    main(args.csv_path, args.no_of_neighbor)
